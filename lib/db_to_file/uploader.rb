@@ -84,9 +84,10 @@ module DbToFile
 
     def extract_data_segments(model_field_file)
       matches = model_field_file.split('/').last(3)
+      DummyModelWrapper.table_name = matches[0].pluralize
 
       {
-          model: matches[0].singularize.classify.constantize,
+          model: DummyModelWrapper,
           id:    matches[1].split('_').last.to_i,
           field: strip_extension(matches[2])
       }
@@ -118,6 +119,9 @@ module DbToFile
 
     def version_controller
       @version_controller ||= VersionController.new
+    end
+
+    class DummyModelWrapper < ActiveRecord::Base
     end
 
     private
